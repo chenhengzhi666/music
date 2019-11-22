@@ -1,0 +1,18 @@
+.nav-wrapper{
+    height: 30px;
+    line-height: 30px;
+    color: #DDDDDD;
+    text-align: center;
+    display: flex;
+    .nav {
+        flex: 1;
+        a {
+            display: block;
+            color: inherit;
+            &.active {
+                color: #FFD700;
+                border-bottom: 2px solid #FFD700;
+            }
+        }
+    }
+}

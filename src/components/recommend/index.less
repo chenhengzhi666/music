@@ -1,0 +1,74 @@
+.recommend-wrapper {
+    position: fixed;
+    top: 87px;
+    left: 0;
+    bottom: 52px;
+    width: 100%;
+    overflow: hidden;
+    .recommend {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        .slider-container {
+            height: 160px;
+            position: relative;
+        }
+
+        .album-container {
+            .title {
+                height: 50px;
+                line-height: 50px;
+                text-align: center;
+                font-weight: 400;
+                font-size: 15px;
+                color: #FFD700;
+            }
+
+            .album-list {
+                padding-bottom: 20px;
+                font-size: 15px;
+
+                .album {
+                    margin: 20px;
+                    display: flex;
+
+                    &:first-child {
+                        margin-top: 0;
+                    }
+
+                    .left {
+                        flex: 0 0 60px;
+                        margin-right: 20px;
+                        height: 60px;
+                        vertical-align: top;
+                    }
+
+                    .right {
+                        flex: 1;
+                        display: inline-block;
+                        height: 60px;
+                        vertical-align: top;
+                        line-height: 20px;
+
+                        .album-name {
+                            font-weight: 500;
+                            color: #ffffff;
+                        }
+
+                        .singer-name,
+                        .album-name {
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                        }
+
+                        .singer-name,
+                        .time {
+                            color: rgba(221, 221, 221, 0.7);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
