@@ -9,7 +9,8 @@ import * as AlbumModel from '@/model/album'
 import Loading from '@/common/loading'
 import LazyLoad, { forceCheck } from 'react-lazyload'
 import { Route } from 'react-router-dom'
-import Album from '@/components/album'
+// import Album from '@/components/album'
+import Album from '@/containers/Album'
 
 
 class Recommend extends Component {

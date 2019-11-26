@@ -85,11 +85,16 @@ class Album extends Component {
         }) 
     }
 
+    selectSong = (song) => () => {
+        this.props.setSongs([song]);
+        this.props.changeCurrentSong(song);
+    }
+
     render() {
         let album = this.state.album 
         let songs = this.state.songs.map((song) => {
             return (
-                <div className='song' key={song.id}>
+                <div className='song' key={song.id} onClick={this.selectSong(song)}>
                     <div className='song-name'>{song.name}</div>
                     <div className='song-singer'>{song.singer}</div>
                 </div>
@@ -98,7 +103,7 @@ class Album extends Component {
         return (
             <CSSTransition in={this.state.show} timeout={300} classNames='translate'>
                 <div className='album-wrapper'>
-                    <MusicHeader title='搜索' />
+                    <MusicHeader title={album.name} />
                     <div className='poster' >
                         <div ref='albumBg' className='album-img' style={{ backgroundImage: `url(${album.img})` }}></div>
                         <div ref='albumFixedBg' className='album-fixed-img' style={{ backgroundImage: `url(${album.img})` }}></div>
