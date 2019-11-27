@@ -15,14 +15,20 @@ import ReactDOM from 'react-dom'
 class Progress extends Component {
     constructor(props) {
         super(props)
-        this.state = {}
+        this.state = {
+            progressBarWidth: 0
+        }
     }
 
     componentDidMount() {
         let progressBarDOM = ReactDOM.findDOMNode(this.refs.progressBar)
         let progressDOM = ReactDOM.findDOMNode(this.refs.progress)
         let progressBtnDOM = ReactDOM.findDOMNode(this.refs.progressBtn)
-        this.progressBarWidth = progressBarDOM.offsetWidth
+        this.setState({
+            progressBarWidth: progressBarDOM.offsetWidth
+        })
+        // this.progressBarWidth = progressBarDOM.offsetWidth
+
 
         // 拖拽功能利用移动端的touchstart、touchmove和touchend来实现。
         // 先判断按钮和拖拽功能是否启用，然后给progressBtnDOM添加touchstart、touchmove和touchend事件。
@@ -62,10 +68,10 @@ class Progress extends Component {
                 //设置按钮left值
                 touch.target.style.left = btnLeft + 'px'
                 //设置进度width值
-                progressDOM.style.width = btnLeft / this.progressBarWidth * 100 + '%'
+                progressDOM.style.width = btnLeft / this.state.progressBarWidth * 100 + '%'
 
                 if (onDrag) {
-                    onDrag(btnLeft / this.progressBarWidth)
+                    onDrag(btnLeft / this.state.progressBarWidth)
                 }
             })
 
@@ -78,10 +84,7 @@ class Progress extends Component {
     }
 
     componentDidUpdate() {
-        //组件更新后重新获取进度条总宽度
-        if (!this.progressBarWidth) {
-            this.progressBarWidth = ReactDOM.findDOMNode(this.refs.progressBar).offsetWidth;
-        }
+        
     }
 
     render() {
@@ -89,7 +92,8 @@ class Progress extends Component {
         let { progress, disableButton } = this.props
         let progressButtonOffsetLeft = 0
         progress = progress || 0
-        if (this.progressBarWidth) progressButtonOffsetLeft = progress * this.progressBarWidth
+        
+        if (this.state.progressBarWidth) progressButtonOffsetLeft = progress * this.state.progressBarWidth
         return (
             <div className='progress-bar' ref='progressBar'>
                 <div className='progress' style={{ width: `${progress * 100}%` }} ref='progress'></div>

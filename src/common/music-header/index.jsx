@@ -9,7 +9,7 @@ class MusicHeader extends Component {
     render() {
         return (
             <div className="music-header">
-                <span className="header-back" onClick={this.handleClick}>
+                <span className="header-back" onClick={this.props.headerBackEvent || this.handleClick}>
                     <i className="iconfont icon-back"></i>
                 </span>
                 <div className="header-title">

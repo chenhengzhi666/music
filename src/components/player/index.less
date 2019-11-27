@@ -1,3 +1,13 @@
+@keyframes rotate {
+    from {
+        transform: rotateZ(0deg)
+    }
+
+    to {
+        transform: rotateZ(360deg)
+    }
+}
+
 .player-wrapper {
     position: fixed;
     top: 0;
@@ -5,6 +15,158 @@
     right: 0;
     bottom: 0;
     z-index: 20;
+    color: #ffffff;
     background-color: #212121;
     display: none;
+
+    .singer {
+        margin-top: 70px;
+        text-align: center;
+        height: 16px;
+        overflow: hidden;
+
+        .name {
+            display: inline-block;
+            position: relative;
+
+            &::before {
+                content: "";
+                width: 15px;
+                height: 0;
+                position: absolute;
+                top: 50%;
+                left: -20px;
+                border-top: 1px solid #fff;
+            }
+
+            &::after {
+                content: "";
+                width: 15px;
+                height: 0;
+                position: absolute;
+                top: 50%;
+                right: -20px;
+                border-top: 1px solid #fff;
+            }
+        }
+    }
+
+    .singer-middle {
+        position: absolute;
+        top: 100px;
+        bottom: 120px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .singer-img {
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            border: 8px solid hsla(0, 0%, 87%, .3);
+
+            img {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+            }
+        }
+
+        .rotate {
+            animation: rotate 15s linear infinite;
+        }
+    }
+
+    .player-operation {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 120px;
+
+        .operation-wrapper {
+            padding: 0 30px;
+
+            .progress-wrapper {
+                display: flex;
+                align-items: center;
+                height: 30px;
+                line-height: 30px;
+                font-size: 12px;
+                font-weight: 400;
+
+                .current-time,
+                .total-time {
+                    flex: 0 0 40px;
+                }
+
+                .current-time {
+                    text-align: left;
+                }
+
+                .total-time {
+                    text-align: right;
+                }
+
+                .progress-bar {
+                    flex: 1;
+                }
+            }
+
+            .play-wrapper {
+                display: flex;
+                margin-top: 10px;
+                color: gold;
+                text-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+
+                .play-model-button,
+                .previous-button,
+                .play-button,
+                .next-button,
+                .play-list-button {
+                    flex: 1 1;
+
+                    i {
+                        font-size: 36px;
+
+                        &.icon-play {
+                            font-size: 44px;
+                        }
+
+                        &.icon-pause {
+                            font-size: 44px;
+                        }
+                    }
+                }
+
+                .play-model-button {
+                    text-align: left;
+                }
+
+                .play-list-button {
+                    text-align: right;
+                }
+            }
+
+        }
+    }
+
+    .player-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        margin: -35px;
+        background-repeat: no-repeat;
+        background-position: 50%;
+        background-size: cover;
+        filter: blur(20px);
+        opacity: .6;
+        transform: translateZ(0);
+        transition: background-image .3s;
+    }
 }
