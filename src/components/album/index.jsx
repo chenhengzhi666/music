@@ -13,7 +13,7 @@ import { CSSTransition } from 'react-transition-group'
 
 class Album extends Component {
     constructor(props) {
-        super(props) 
+        super(props)
         this.state = {
             loading: true,
             show: false,
@@ -25,23 +25,24 @@ class Album extends Component {
 
     componentDidMount() {
         this.setState({
-            show: true
-        }) 
-        let albumBgDOM = ReactDOM.findDOMNode(this.refs.albumBg) 
-        let albumContainerDOM = ReactDOM.findDOMNode(this.refs.albumContainer) 
-        albumContainerDOM.style.top = albumBgDOM.offsetHeight + 'px' 
+            show: true  //开始动画进入
+        })
+        let albumBgDOM = ReactDOM.findDOMNode(this.refs.albumBg)
+        let albumContainerDOM = ReactDOM.findDOMNode(this.refs.albumContainer)
+        albumContainerDOM.style.top = albumBgDOM.offsetHeight + 'px'
+        // 获取专辑信息
         getAlbumInfo(this.props.match.params.id).then((res) => {
             if (res && res.code === CODE_SUCCESS) {
-                let album = AlbumModel.createAlbumByDetail(res.data) 
-                album.desc = res.data.desc 
+                let album = AlbumModel.createAlbumByDetail(res.data)
+                album.desc = res.data.desc
 
-                let songList = res.data.list 
-                let songs = [] 
+                let songList = res.data.list
+                let songs = []
                 songList.forEach(item => {
-                    let song = SongModel.createSong(item) 
-                    this.getSongUrl(song, item.songmid) 
-                    songs.push(song) 
-                }) 
+                    let song = SongModel.createSong(item)
+                    this.getSongUrl(song, item.songmid)
+                    songs.push(song)
+                })
                 this.setState({
                     loading: false,
                     album: album,
@@ -54,61 +55,79 @@ class Album extends Component {
                     }
                     this.detailScroll = new Bscroll(this.refs.detailScroll, options)
 
-                    let albumFixedBgDOM = ReactDOM.findDOMNode(this.refs.albumFixedBg) 
-                    let albumBgDOM = ReactDOM.findDOMNode(this.refs.albumBg) 
+                    let albumFixedBgDOM = ReactDOM.findDOMNode(this.refs.albumFixedBg)
+                    let albumBgDOM = ReactDOM.findDOMNode(this.refs.albumBg)
                     this.detailScroll.on('scroll', (pos) => {
                         if (pos.y < 0) {
                             if (Math.abs(pos.y) + 55 > albumBgDOM.offsetHeight) {
-                                albumFixedBgDOM.style.display = 'block' 
+                                albumFixedBgDOM.style.display = 'block'
                             } else {
-                                albumFixedBgDOM.style.display = 'none' 
+                                albumFixedBgDOM.style.display = 'none'
                             }
                         } else {
-                            let transform = `scale(${1 + pos.y * 0.004}, ${1 + pos.y * 0.004})` 
-                            albumBgDOM.style['webkitTransform'] = transform 
-                            albumBgDOM.style['transform'] = transform 
+                            let transform = `scale(${1 + pos.y * 0.004}, ${1 + pos.y * 0.004})`
+                            albumBgDOM.style['webkitTransform'] = transform
+                            albumBgDOM.style['transform'] = transform
                         }
                     })
-                }) 
+                })
             }
         })
     }
 
+    // 获取歌曲url
     getSongUrl(song, mId) {
         getSongVKey(mId).then((res) => {
             if (res && res.code === CODE_SUCCESS) {
                 if (res.data.items) {
-                    let item = res.data.items[0] 
+                    let item = res.data.items[0]
                     song.url = `http://dl.stream.qqmusic.qq.com/${item.filename}?vkey=${item.vkey}&guid=3655047200&fromtag=66`
                 }
             }
-        }) 
+        })
     }
 
+    // 选择播放歌曲
     selectSong = (song) => () => {
         this.props.setSongs([song]);
         this.props.changeCurrentSong(song);
     }
 
+    // 播放全部
+    playAll = () => {
+        const songs = this.state.songs
+        if(songs.length > 0) {
+            this.props.setSongs(songs)
+            this.props.changeCurrentSong(songs[0])
+            this.props.showMusicPlayer(true)
+        }
+    }
+
     render() {
-        let album = this.state.album 
+        let album = this.state.album
         let songs = this.state.songs.map((song) => {
             return (
                 <div className='song' key={song.id} onClick={this.selectSong(song)}>
                     <div className='song-name'>{song.name}</div>
                     <div className='song-singer'>{song.singer}</div>
                 </div>
-            ) 
-        }) 
+            )
+        })
         return (
-            <CSSTransition in={this.state.show} timeout={300} classNames='translate'>
+            <CSSTransition in={this.state.show} timeout={300} classNames='translate' onExited={() => {
+                window.history.back()
+            }}>
                 <div className='album-wrapper'>
-                    <MusicHeader title={album.name} />
+                    <MusicHeader title={album.name} headerBackEvent={() => {
+                        this.setState({
+                            show: false
+                        })
+                    }} />
                     <div className='poster' >
                         <div ref='albumBg' className='album-img' style={{ backgroundImage: `url(${album.img})` }}></div>
                         <div ref='albumFixedBg' className='album-fixed-img' style={{ backgroundImage: `url(${album.img})` }}></div>
                         <div className='play-wrapper' ref='playButtonWrapper'>
-                            <div className='play-button'>
+                            <div className='play-button' onClick={this.playAll}>
                                 <i className='iconfont icon-play'></i>
                                 <span>播放全部</span>
                             </div>
@@ -134,7 +153,7 @@ class Album extends Component {
                     </div>
                 </div>
             </CSSTransition>
-        ) 
+        )
     }
 }
 

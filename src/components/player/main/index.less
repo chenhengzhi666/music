@@ -14,10 +14,11 @@
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 20;
+    z-index: 200;
     color: #ffffff;
     background-color: #212121;
     display: none;
+    overflow: hidden;
 
     .singer {
         margin-top: 70px;
@@ -168,5 +169,21 @@
         opacity: .6;
         transform: translateZ(0);
         transition: background-image .3s;
+    }
+}
+
+.player-transition-enter {
+    transform: translate3d(0, 100%, 0);
+    &.player-transition-enter-active {
+        transition: transform .5s;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+.player-transition-exit {
+    transform: translate3d(0, 0, 0);
+    &.player-transition-exit-active {
+        transition: transform .5s;
+        transform: translate3d(0, 100%, 0);
     }
 }

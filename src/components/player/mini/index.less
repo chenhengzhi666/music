@@ -1,8 +1,17 @@
+@keyframes rotate {
+    from {
+        transform: rotateZ(0deg)
+    }
+
+    to {
+        transform: rotateZ(360deg)
+    }
+}
 .mini-layer-wrapper {
     position: fixed;
     left: 0;
     bottom: 0;
-    z-index: 1000;
+    z-index: 100;
     width: 100%;
     height: 52px;
     background-color: #333333;
@@ -15,7 +24,9 @@
         top: -6px;
         border-radius: 50%;
         border: 2px solid rgba(221, 221, 221, 0.3);
-
+        &.rotate {
+            animation: rotate 15s linear infinite;
+        }
         img {
             width: 100%;
             height: 100%;

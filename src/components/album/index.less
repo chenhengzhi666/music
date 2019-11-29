@@ -5,11 +5,10 @@
     right: 0;
     bottom: 0;
     background-color: #212121;
-    z-index: 10;
-
+    z-index: 50;
+    overflow: hidden;
     .poster {
         position: relative;
-
         .album-img {
             position: relative;
             z-index: -1;
@@ -151,5 +150,13 @@
      &.translate-enter-active {
         transition: transform .3s;
         transform: translate3d(0, 0, 0);
+    }
+}
+
+.translate-exit {
+    transform: translate3d(0, 0, 0);
+     &.translate-exit-active {
+        transition: transform .3s;
+        transform: translate3d(100%, 0, 0);
     }
 }

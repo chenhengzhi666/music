@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { showPlayer, changeSong } from '@/redux/action'
-import Player from '@/components/player'
+import Player from '@/components/player/main'
 
 const mapDispatchToProps = (dispatch) => ({
     showMusicPlayer: (status) => {

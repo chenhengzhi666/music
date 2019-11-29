@@ -7,14 +7,14 @@ import RouterMap from '@/router/index.js'
 import { Provider }  from 'react-redux'
 import store from '@/redux/store'
 import { BrowserRouter as Router } from 'react-router-dom'
-import Player from '@/containers/Player'
+import MusicPlayer from '@/components/player'
 
 ReactDOM.render(
     <Provider store={store}>
         <Router>
             <Header />
             <RouterMap />
-            <Player />
+            <MusicPlayer />
         </Router>
     </Provider>, 
     document.getElementById('root')

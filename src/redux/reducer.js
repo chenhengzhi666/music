@@ -3,7 +3,7 @@ import localStorage from '@/util/storage'
 
 //需要存储的初始状态数据
 const initialState = {
-    showStatus: true,  //显示状态
+    showStatus: false,  //播放界面显示状态
     song: localStorage.getCurrentSong(),  //当前歌曲
     songs: localStorage.getSongs()  //歌曲列表
 }

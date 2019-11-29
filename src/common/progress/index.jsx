@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import './index.less'
-import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 
 /* 
@@ -15,19 +14,14 @@ import ReactDOM from 'react-dom'
 class Progress extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            progressBarWidth: 0
-        }
+        this.state = { }
     }
 
     componentDidMount() {
-        let progressBarDOM = ReactDOM.findDOMNode(this.refs.progressBar)
-        let progressDOM = ReactDOM.findDOMNode(this.refs.progress)
-        let progressBtnDOM = ReactDOM.findDOMNode(this.refs.progressBtn)
-        this.setState({
-            progressBarWidth: progressBarDOM.offsetWidth
-        })
-        // this.progressBarWidth = progressBarDOM.offsetWidth
+        this.progressBarDOM = ReactDOM.findDOMNode(this.refs.progressBar)
+        this.progressDOM = ReactDOM.findDOMNode(this.refs.progress)
+        this.progressBtnDOM = ReactDOM.findDOMNode(this.refs.progressBtn)
+        this.progressBarWidth = this.progressBarDOM.offsetWidth
 
 
         // 拖拽功能利用移动端的touchstart、touchmove和touchend来实现。
@@ -43,39 +37,38 @@ class Progress extends Component {
             //按钮left值
             let buttonLeft = 0
 
-            progressBtnDOM.addEventListener('touchstart', (e) => {
+            this.progressBtnDOM.addEventListener('touchstart', (e) => {
                 let touch = e.touches[0]
                 downX = touch.clientX
                 buttonLeft = parseInt(touch.target.style.left, 10)
-
                 if (onDragStart) {
                     onDragStart()
                 }
             })
 
-            progressBtnDOM.addEventListener('touchmove', (e) => {
+            this.progressBtnDOM.addEventListener('touchmove', (e) => {
                 e.preventDefault()
 
                 let touch = e.touches[0]
                 let diffX = touch.clientX - downX
 
                 let btnLeft = buttonLeft + diffX
-                if (btnLeft > progressBarDOM.offsetWidth) {
-                    btnLeft = progressBarDOM.offsetWidth
+                if (btnLeft > (this.progressBarWidth || btnLeft + 1)) {
+                    btnLeft = this.progressBarWidth
                 } else if (btnLeft < 0) {
                     btnLeft = 0
                 }
                 //设置按钮left值
                 touch.target.style.left = btnLeft + 'px'
                 //设置进度width值
-                progressDOM.style.width = btnLeft / this.state.progressBarWidth * 100 + '%'
+                this.progressDOM.style.width = btnLeft / this.progressBarWidth * 100 + '%'
 
                 if (onDrag) {
-                    onDrag(btnLeft / this.state.progressBarWidth)
+                    onDrag(btnLeft / this.progressBarWidth)
                 }
             })
 
-            progressBtnDOM.addEventListener('touchend', (e) => {
+            this.progressBtnDOM.addEventListener('touchend', (e) => {
                 if (onDragEnd) {
                     onDragEnd()
                 }
@@ -84,7 +77,23 @@ class Progress extends Component {
     }
 
     componentDidUpdate() {
+        setTimeout(() => {
+            if (!this.progressBarWidth) this.progressBarWidth = this.progressBarDOM.offsetWidth
+        }, 0);
         
+    }
+
+    // 点击播放界面进度条
+    progressClick = (e) => {
+        const { progressClick } = this.props
+        if (progressClick) {
+            let barLeft = this.progressBarDOM.getBoundingClientRect().left
+            let clickX = e.clientX - barLeft
+            let progress = clickX / (this.progressBarWidth || this.progressBarDOM.offsetWidth)
+            this.progressBtnDOM.style.left = `${clickX}px`
+            this.progressDOM.style.width = `${progress * 100}%`
+            progressClick(progress)
+        }
     }
 
     render() {
@@ -92,28 +101,18 @@ class Progress extends Component {
         let { progress, disableButton } = this.props
         let progressButtonOffsetLeft = 0
         progress = progress || 0
-        
-        if (this.state.progressBarWidth) progressButtonOffsetLeft = progress * this.state.progressBarWidth
+        if (this.progressBarWidth) progressButtonOffsetLeft = progress * this.progressBarWidth
+
         return (
-            <div className='progress-bar' ref='progressBar'>
+            <div className='progress-bar' ref='progressBar' onClick={this.progressClick}>
                 <div className='progress' style={{ width: `${progress * 100}%` }} ref='progress'></div>
                 {
                     disableButton ? '' :
-                        <div className='progress-button' style={{ left: progressButtonOffsetLeft }} ref='progressBtn'></div>
+                        <div className='progress-button' style={{ left: `${progressButtonOffsetLeft}px` }} ref='progressBtn'></div>
                 }
             </div>
         )
     }
 }
-
-//使用prop-types给传入的props进行类型校验
-// Progress.prototype = {
-//     progress: PropTypes.number.isRequired,
-//     disableButton: PropTypes.bool,
-//     disableDrag: PropTypes.bool,
-//     onDragStart: PropTypes.func,
-//     onDrag: PropTypes.func,
-//     onDragEnd: PropTypes.func
-// }
 
 export default Progress

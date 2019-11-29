@@ -1,0 +1,116 @@
+@border-color: #eeeeee;
+
+.song-list-wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 300;
+    background-color: rgba(0, 0, 0, .3);
+    display: none;
+
+    .song-list {
+        height: 58%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff;
+        border-radius: 16px 16px 0 0;
+        color: #000;
+
+        .title {
+            height: 42px;
+            line-height: 42px;
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            box-sizing: border-box;
+            border-bottom: 1px solid @border-color;
+
+            .close {
+                margin-right: 15px;
+            }
+
+            .name {
+                margin-left: 15px;
+            }
+        }
+
+        .scrollView {
+            height: 100%;
+            background-color: #ffffff;
+            overflow: hidden;
+            .list {
+                margin-left: 15px;
+                overflow: hidden;
+                .item {
+                    display: flex;
+                    justify-content: space-between;
+                    height: 40px;
+                    line-height: 40px;
+                    border-bottom: 1px solid @border-color;
+                    &:last-child {
+                        margin-bottom: 40px;
+                    }
+                    .name-singer {
+                        flex: 1;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        font-size: 16px;
+
+                        .singer {
+                            font-size: 12px;
+                            color: #666666;
+                        }
+                    }
+
+                    i {
+                        flex: 0 0 62px;
+                        text-align: center;
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+.lists-enter {
+    opacity: 0;
+
+    .song-list {
+        transform: translate3d(0, 100%, 0);
+    }
+
+    &.lists-enter-active {
+        transition: opacity .5s;
+        opacity: 1;
+
+        .song-list {
+            transition: transform .5s;
+            transform: translate3d(0, 0, 0);
+        }
+    }
+}
+
+.lists-exit {
+    opacity: 1;
+
+    .song-list {
+        transform: translate3d(0, 0, 0);
+    }
+
+    &.lists-exit-active {
+        transition: opacity .5s;
+        opacity: 0;
+
+        .song-list {
+            transition: transform .5s;
+            transform: translate3d(0, 100%, 0);
+        }
+
+    }
+}
