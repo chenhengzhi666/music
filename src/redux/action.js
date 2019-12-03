@@ -11,7 +11,7 @@ const changeSong = (song) => ({
 })
 
 const removeSong = (id) =>({
-    type: actionType.CHANGE_SONG,
+    type: actionType.REMOVE_SONG,
     id
 })
 

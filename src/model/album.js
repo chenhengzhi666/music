@@ -2,13 +2,14 @@
  *  专辑类模型
  */
 class Album {
-    constructor(id, mId, name, img, singer, publicTime) {
+    constructor(id, mId, title, img, singer, publicTime, desc) {
         this.id = id;
         this.mId = mId;
-        this.name = name;
+        this.title = title;
         this.img = img;
         this.singer = singer;
         this.publicTime = publicTime;
+        this.desc = desc;
     }
 }
 
@@ -22,7 +23,8 @@ const createAlbumByList = (data) => {
         data.album_name,
         `http://y.gtimg.cn/music/photo_new/T002R300x300M000${data.album_mid}.jpg?max_age=2592000`,
         filterSinger(data.singers),
-        data.public_time
+        data.public_time,
+        ''
     );
 }
 
@@ -36,7 +38,8 @@ const createAlbumByDetail = (data) => {
         data.name,
         `http://y.gtimg.cn/music/photo_new/T002R300x300M000${data.mid}.jpg?max_age=2592000`,
         data.singername,
-        data.aDate
+        data.aDate,
+        data.desc
     );
 }
 

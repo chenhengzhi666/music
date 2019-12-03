@@ -20,14 +20,14 @@ class SongList extends Component {
         this.listScroll.refresh()
     }
     render() {
-        let { listStatus, currentSongIndex, songs, currentSong, hideSongList } = this.props
+        let { listStatus, currentSongIndex, songs, currentSong, hideSongList, removeSong } = this.props
         console.log('listStatus：', listStatus)
         let songList = songs.length > 0 && songs.map((item, index) => (
             <li key={item.id} className='item'>
                 <p className='name-singer'>
                     <span className='name'>{item.name}</span><span className='singer'> - {item.singer}</span>
                 </p>
-                <i className='iconfont icon-delect'></i>
+                <i className={(index === currentSongIndex ? 'forbid ' : '') + 'iconfont icon-delect'} onClick={() => index === currentSongIndex ? {} : removeSong(item.id)}></i>
             </li>
         ))
         return (
@@ -45,7 +45,7 @@ class SongList extends Component {
                 <div className='song-list-wrapper' ref='songListWrapper' onClick={hideSongList}>
                     <div className='song-list' onClick={(e) => { e.stopPropagation() }}>
                         <div className='title'>
-                            <span className='name'>播放列表</span>
+                            <span className='name'>播放列表（{songList.length}）</span>
                             <span className='close' onClick={hideSongList}>关闭</span>
                         </div>
                         <div className='scrollView' ref='list'>

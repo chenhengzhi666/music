@@ -1,6 +1,6 @@
 import { connect } from 'react-redux'
 import { showPlayer, changeSong, setSongs } from '@/redux/action'
-import Album from '@/components/album'
+import Detail from '@/common/detail'
 
 const mapDispatchToProps = (dispatch) => ({
     showMusicPlayer: (status) =>{
@@ -14,4 +14,4 @@ const mapDispatchToProps = (dispatch) => ({
     }
 })
 
-export default connect(null, mapDispatchToProps)(Album)
+export default connect(null, mapDispatchToProps)(Detail)

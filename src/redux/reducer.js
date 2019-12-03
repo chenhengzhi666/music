@@ -28,7 +28,7 @@ const reducer = (state = initialState, action) => {
                 songs: action.songs
             }
         case actionType.REMOVE_SONG:    //删除歌曲
-            let newSongs = Object.assign({}, state).filter((song) => song.id !== action.id)
+            let newSongs = Object.assign({}, state).songs.filter((song) => song.id !== action.id)
             localStorage.setSongs(newSongs)
             return{
                 ...state,

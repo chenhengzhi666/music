@@ -9,8 +9,7 @@ import * as AlbumModel from '@/model/album'
 import Loading from '@/common/loading'
 import LazyLoad, { forceCheck } from 'react-lazyload'
 import { Route } from 'react-router-dom'
-// import Album from '@/components/album'
-import Album from '@/containers/Album'
+import Detail from '@/containers/Detail'
 
 
 class Recommend extends Component {
@@ -135,7 +134,7 @@ class Recommend extends Component {
                     </div>
                 </div>
                 <Loading show={this.state.loading} title='正在加载...' />
-                <Route path={`${match.url}/:id`} component={Album} />
+                <Route path={`${match.url}/:id`} component={Detail} />
             </div>
         );
     }

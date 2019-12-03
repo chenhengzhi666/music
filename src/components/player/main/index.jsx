@@ -51,7 +51,10 @@ class Player extends Component {
             }
         }, false)
 
-        this.audioDOM.addEventListener('error', () => { alert('歌曲加载出错！') }, false)
+        this.audioDOM.addEventListener('error', () => { 
+            this.stopImgRotate()
+            alert('歌曲加载出错！') 
+        }, false)
     }
 
 

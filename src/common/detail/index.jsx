@@ -3,15 +3,16 @@ import './index.less'
 import MusicHeader from '@/common/music-header'
 import Bscroll from 'better-scroll'
 import Loading from '@/common/loading'
-import { getAlbumInfo } from '@/api/recommend'
+import getDetailInfo from '@/api/detail'
 import { CODE_SUCCESS } from '@/api/config'
 import * as AlbumModel from '@/model/album'
+import * as RankingModel from '@/model/ranking'
 import * as SongModel from '@/model/song'
 import ReactDOM from 'react-dom'
 import { getSongVKey } from '@/api/song'
 import { CSSTransition } from 'react-transition-group'
 
-class Album extends Component {
+class Detail extends Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -19,7 +20,8 @@ class Album extends Component {
             show: false,
             album: {},
             songs: [],
-            refreshScroll: false
+            type: '',   // 父级页面类型
+            name: ''    // 详情页类别名称
         }
     }
 
@@ -30,23 +32,19 @@ class Album extends Component {
         let albumBgDOM = ReactDOM.findDOMNode(this.refs.albumBg)
         let albumContainerDOM = ReactDOM.findDOMNode(this.refs.albumContainer)
         albumContainerDOM.style.top = albumBgDOM.offsetHeight + 'px'
-        // 获取专辑信息
-        getAlbumInfo(this.props.match.params.id).then((res) => {
+        const type = this.props.match.path.match(/\/(\S*)\/:id/)[1] // 获取父级路由类型
+        this.setState({
+            type
+        })
+        // 获取信息
+        getDetailInfo(type, this.props.match.params.id).then((res) => {
             if (res && res.code === CODE_SUCCESS) {
-                let album = AlbumModel.createAlbumByDetail(res.data)
-                album.desc = res.data.desc
-
-                let songList = res.data.list
-                let songs = []
-                songList.forEach(item => {
-                    let song = SongModel.createSong(item)
-                    this.getSongUrl(song, item.songmid)
-                    songs.push(song)
-                })
+                let detailHandle = this.detailHandle(type, res)
                 this.setState({
                     loading: false,
-                    album: album,
-                    songs: songs
+                    album: detailHandle.base,
+                    songs: detailHandle.songs,
+                    name: detailHandle.name
                 }, () => {
                     const options = {
                         click: true,
@@ -75,6 +73,38 @@ class Album extends Component {
         })
     }
 
+    detailHandle = (type, res) => {
+        let data = {}
+        let songs = []
+        switch (type) {
+            case 'recommend':
+                data.base = AlbumModel.createAlbumByDetail(res.data)
+                res.data.list.forEach(item => {
+                    let song = SongModel.createSong(item)
+                    this.getSongUrl(song, item.songmid)
+                    songs.push(song)
+                })
+                data.songs = songs
+                data.name = '专辑'
+                return data
+            case 'ranking':
+                data.base = RankingModel.createRankingByDetail(res.topinfo)
+                res.songlist.forEach(item => {
+                    if (item.data.pay.payplay === 1) { return }
+                    let song = SongModel.createSong(item.data);
+                    this.getSongUrl(song, item.data.songmid);
+                    songs.push(song);
+                })
+                data.songs = songs
+                data.name = '排行榜'
+                return data
+            default:
+                return data
+        }
+
+
+    }
+
     // 获取歌曲url
     getSongUrl(song, mId) {
         getSongVKey(mId).then((res) => {
@@ -96,7 +126,7 @@ class Album extends Component {
     // 播放全部
     playAll = () => {
         const songs = this.state.songs
-        if(songs.length > 0) {
+        if (songs.length > 0) {
             this.props.setSongs(songs)
             this.props.changeCurrentSong(songs[0])
             this.props.showMusicPlayer(true)
@@ -104,12 +134,18 @@ class Album extends Component {
     }
 
     render() {
-        let album = this.state.album
-        let songs = this.state.songs.map((song) => {
+        const { album, name, type } = this.state
+        const typeBoolean = type === 'recommend'
+        let songs = this.state.songs.map((song, index) => {
             return (
                 <div className='song' key={song.id} onClick={this.selectSong(song)}>
-                    <div className='song-name'>{song.name}</div>
-                    <div className='song-singer'>{song.singer}</div>
+                    {
+                        !typeBoolean ?  <div className={`song-index${index + 1} song-index`}>{index + 1}</div> : null
+                    }
+                    <div className='song-info'>
+                        <div className='song-name'>{song.name}</div>
+                        <div className='song-singer'>{song.singer}</div>
+                    </div>
                 </div>
             )
         })
@@ -118,7 +154,7 @@ class Album extends Component {
                 window.history.back()
             }}>
                 <div className='album-wrapper'>
-                    <MusicHeader title={album.name} headerBackEvent={() => {
+                    <MusicHeader title={album.title} headerBackEvent={() => {
                         this.setState({
                             show: false
                         })
@@ -137,12 +173,12 @@ class Album extends Component {
                     <div ref='albumContainer' className='album-container'>
                         <div className='detail-view' ref='detailScroll' style={this.state.loading ? { display: 'none' } : {}}>
                             <div className='detail-wrapper'>
-                                <div className='song-count'>专辑 共{songs.length}首</div>
+                                <div className='song-count'>{name} 共{songs.length}首</div>
                                 <div className='song-list'>
                                     {songs}
                                 </div>
                                 <div className='info'>
-                                    <h1 className='titlle'>专辑简介</h1>
+                                    <h1 className='titlle'>{typeBoolean ? name : ''}简介</h1>
                                     <p className='content'>
                                         {album.desc}
                                     </p>
@@ -157,4 +193,4 @@ class Album extends Component {
     }
 }
 
-export default Album 
+export default Detail 
