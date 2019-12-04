@@ -6,7 +6,7 @@ import '@/assets/less/index.less'
 import RouterMap from '@/router/index.js'
 import { Provider }  from 'react-redux'
 import store from '@/redux/store'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { HashRouter as Router } from 'react-router-dom'
 import MusicPlayer from '@/components/player'
 
 ReactDOM.render(

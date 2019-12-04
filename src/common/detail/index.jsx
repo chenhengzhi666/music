@@ -7,6 +7,7 @@ import getDetailInfo from '@/api/detail'
 import { CODE_SUCCESS } from '@/api/config'
 import * as AlbumModel from '@/model/album'
 import * as RankingModel from '@/model/ranking'
+import * as SingerModel from '@/model/singer'
 import * as SongModel from '@/model/song'
 import ReactDOM from 'react-dom'
 import { getSongVKey } from '@/api/song'
@@ -98,11 +99,20 @@ class Detail extends Component {
                 data.songs = songs
                 data.name = '排行榜'
                 return data
+            case 'singer':
+                data.base = SingerModel.createSingerByDetail(res.data)
+                res.data.list.forEach(item => {
+                    if (item.musicData.pay.payplay === 1) { return }
+                    let song = SongModel.createSong(item.musicData);
+                    this.getSongUrl(song, song.mId);
+                    songs.push(song);
+                })
+                data.songs = songs
+                data.name = '歌曲'
+                return data
             default:
                 return data
         }
-
-
     }
 
     // 获取歌曲url
@@ -135,12 +145,14 @@ class Detail extends Component {
 
     render() {
         const { album, name, type } = this.state
-        const typeBoolean = type === 'recommend'
+        const trecommendBoolean = type === 'recommend'
+        const rankingBoolean = type === 'ranking'
+        const singerBoolean = type === 'singer'
         let songs = this.state.songs.map((song, index) => {
             return (
                 <div className='song' key={song.id} onClick={this.selectSong(song)}>
                     {
-                        !typeBoolean ?  <div className={`song-index${index + 1} song-index`}>{index + 1}</div> : null
+                        rankingBoolean ? <div className={`song-index${index + 1} song-index`}>{index + 1}</div> : null
                     }
                     <div className='song-info'>
                         <div className='song-name'>{song.name}</div>
@@ -177,12 +189,16 @@ class Detail extends Component {
                                 <div className='song-list'>
                                     {songs}
                                 </div>
-                                <div className='info'>
-                                    <h1 className='titlle'>{typeBoolean ? name : ''}简介</h1>
-                                    <p className='content'>
-                                        {album.desc}
-                                    </p>
-                                </div>
+                                {
+                                    !singerBoolean ?
+                                        <div className='info'>
+                                            <h1 className='titlle'>{trecommendBoolean ? name : ''}简介</h1>
+                                            <p className='content'>
+                                                {album.desc}
+                                            </p>
+                                        </div> : null
+                                }
+
                             </div>
                         </div>
                         <Loading title='正在加载...' show={this.state.loading} />

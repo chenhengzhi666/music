@@ -21,7 +21,6 @@ class SongList extends Component {
     }
     render() {
         let { listStatus, currentSongIndex, songs, currentSong, hideSongList, removeSong } = this.props
-        console.log('listStatus：', listStatus)
         let songList = songs.length > 0 && songs.map((item, index) => (
             <li key={item.id} className='item'>
                 <p className='name-singer'>

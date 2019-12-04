@@ -9,7 +9,7 @@ const RouterMap = () => (
     <Switch>
         <Route path='/recommend' component={Recommend} />
         <Route path='/ranking' component={Ranking} />
-        <Route exact path='/singer' component={Singer} />
+        <Route path='/singer' component={Singer} />
         <Route exact path='/search' component={Search} />
         <Redirect to='/recommend' />
     </Switch>

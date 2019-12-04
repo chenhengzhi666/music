@@ -1,0 +1,69 @@
+.singer-wrapper {
+    position: absolute;
+    top: 87px;
+    left: 0;
+    bottom: 52px;
+    width: 100%;
+    overflow: hidden;
+    .nav-area {
+        padding: 10px 20px;
+        font-size: 14px;
+        background-color: #212121;
+        .view {
+            width: 100%;
+            overflow: hidden;
+            .list {
+                display: flex;
+                height: 30px;
+                align-items: center;
+                .item {
+                    flex: 0 0 auto;
+                    padding: 3px 8px;
+                    color: inherit;
+                    text-align: center;
+                    border: 1px solid transparent;
+                    box-sizing: border-box;
+                    cursor: default;
+                    border-radius: 10px;
+                    &.active {
+                        color: #FFD700 !important;
+                        border: 1px solid #FFD700
+                    }
+                }
+            }
+        }
+    }
+    .singer-area {
+        position: absolute;
+        top: 80px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 0 20px;
+        overflow: hidden;
+        .single-list {
+            width: 100%;
+            .singer {
+                margin: 12px 0;
+                height: 50px;
+                line-height: 50px;
+                display: flex;
+                &:first-child {
+                    margin-top: 0;
+                }
+                .img {
+                    flex: 0 0 50px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                }
+                .name {
+                    flex: 1;
+                    margin-left: 10px;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+            }
+        }
+    }
+}

@@ -20,6 +20,10 @@
     display: none;
     overflow: hidden;
 
+    .header-back {
+        transform: rotate(-90deg);
+    }
+
     .singer {
         margin-top: 70px;
         text-align: center;
@@ -174,6 +178,7 @@
 
 .player-transition-enter {
     transform: translate3d(0, 100%, 0);
+
     &.player-transition-enter-active {
         transition: transform .5s;
         transform: translate3d(0, 0, 0);
@@ -182,6 +187,7 @@
 
 .player-transition-exit {
     transform: translate3d(0, 0, 0);
+
     &.player-transition-exit-active {
         transition: transform .5s;
         transform: translate3d(0, 100%, 0);
