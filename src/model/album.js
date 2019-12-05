@@ -13,6 +13,19 @@ class Album {
     }
 }
 
+// 通过搜索创建专辑对象
+const createAlbumBySearch = (data) => {
+    return new Album(
+        data.albumID,
+        data.albumMID,
+        data.albumName,
+        data.albumPic,
+        data.singerName,
+        '',
+        ''
+    );
+}
+
 /**
  *  通过专辑列表数据创建专辑对象函数
  */
@@ -50,4 +63,4 @@ const filterSinger = (singers) => {
     return singerArray.join("/");
 }
 
-export { Album, createAlbumByList, createAlbumByDetail }
+export { Album, createAlbumByList, createAlbumByDetail, createAlbumBySearch }

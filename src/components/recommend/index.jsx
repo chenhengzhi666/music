@@ -95,7 +95,7 @@ class Recommend extends Component {
                     </div>
                     <div className='right'>
                         <div className='album-name'>
-                            {album.name}
+                            {album.title}
                         </div>
                         <div className='singer-name'>
                             {album.singer}

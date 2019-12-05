@@ -8,6 +8,8 @@ const getDetailInfo = (type, id) => {
             return getRankingInfo(id)
         case 'recommend':
             return getAlbumInfo(id)
+        case 'album':
+            return getAlbumInfo(id)
         case 'singer':
             return getSingerInfo(id)
         default:

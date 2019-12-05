@@ -1,0 +1,149 @@
+input[type="search"] {
+    -webkit-appearance: none;
+    // 也可以去除加上border: 0;之类的 根据设计图来
+}
+
+input::-webkit-search-cancel-button {
+    display: none;
+}
+
+// 关闭的按钮
+.search-wrapper {
+    position: absolute;
+    top: 87px;
+    left: 0;
+    bottom: 52px;
+    width: 100%;
+    overflow: hidden;
+
+    .search-area {
+        padding: 20px;
+        background-color: #212121;
+
+        .search-box-wrapper {
+            height: 37px;
+            line-height: 37px;
+            font-size: 14px;
+            border-radius: 3px;
+            line-height: 0;
+            background-color: #333333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
+
+            .input-form {
+                flex: 1;
+
+                input {
+                    width: 100%;
+                    background: none;
+                    border: none;
+                    outline: none;
+                    font-size: 14px;
+                    color: #ddd;
+                }
+            }
+
+            .icon-search {
+                font-size: 14px;
+                flex: 0 0 36px;
+            }
+
+            .cancel-btn {
+                flex: 0 0 46px;
+            }
+
+        }
+    }
+
+    .hot-search-area {
+        position: absolute;
+        left: 20px;
+        right: 20px;
+        z-index: 2;
+        padding-top: 10px;
+
+        .title {
+            font-size: 14px;
+            color: #FFD700;
+        }
+
+        .hot-list {
+            display: flex;
+            flex-wrap: wrap;
+
+            .hot {
+                flex: 0 0 auto;
+                padding: 5px 8px;
+                margin-right: 10px;
+                margin-top: 10px;
+                border-radius: 10px;
+                font-size: 14px;
+                border: 1px solid transparent;
+                color: #DDDDDD;
+                background-color: #333333;
+            }
+        }
+    }
+
+    .result-area {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        top: 76px;
+        bottom: 0;
+        overflow: hidden;
+
+        .result-view {
+            background-color: #212121;
+
+            .item {
+                display: flex;
+                margin: 15px 0;
+                align-items: center;
+                justify-content: center;
+
+                &:last-child {
+                    padding-bottom: 15px;
+                }
+                .left {
+                    flex: 0 0 40px;
+                    text-align: center;
+                    i{
+                        font-size: 26px;
+                    }
+                }
+
+                .right {
+                    flex: 1;
+                    margin-left: 10px;
+
+                    p {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                    }
+
+                    .name {
+                        margin-top: 0;
+                        padding: 1px 0;
+                        font-size: 14px;
+                    }
+
+                    .singer {
+                        margin-top: 5px;
+                        font-size: 12px;
+                        color: rgba(221, 221, 221, 0.7);
+                    }
+                }
+                &.singer {
+                    img {
+                        border-radius: 50%;
+                        overflow: hidden;
+                    }
+                }
+            }
+        }
+    }
+}

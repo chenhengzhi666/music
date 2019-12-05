@@ -33,7 +33,8 @@ class Detail extends Component {
         let albumBgDOM = ReactDOM.findDOMNode(this.refs.albumBg)
         let albumContainerDOM = ReactDOM.findDOMNode(this.refs.albumContainer)
         albumContainerDOM.style.top = albumBgDOM.offsetHeight + 'px'
-        const type = this.props.match.path.match(/\/(\S*)\/:id/)[1] // 获取父级路由类型
+        let arr = this.props.match.path.split('/') 
+        const type = arr[arr.length - 2]    // 获取父级路由类型
         this.setState({
             type
         })
@@ -79,6 +80,16 @@ class Detail extends Component {
         let songs = []
         switch (type) {
             case 'recommend':
+                data.base = AlbumModel.createAlbumByDetail(res.data)
+                res.data.list.forEach(item => {
+                    let song = SongModel.createSong(item)
+                    this.getSongUrl(song, item.songmid)
+                    songs.push(song)
+                })
+                data.songs = songs
+                data.name = '专辑'
+                return data
+            case 'album':
                 data.base = AlbumModel.createAlbumByDetail(res.data)
                 res.data.list.forEach(item => {
                     let song = SongModel.createSong(item)
@@ -145,7 +156,7 @@ class Detail extends Component {
 
     render() {
         const { album, name, type } = this.state
-        const trecommendBoolean = type === 'recommend'
+        const trecommendBoolean = type === 'recommend' || type === 'album'
         const rankingBoolean = type === 'ranking'
         const singerBoolean = type === 'singer'
         let songs = this.state.songs.map((song, index) => {
