@@ -173,13 +173,16 @@ class Detail extends Component {
             )
         })
         return (
-            <CSSTransition in={this.state.show} timeout={300} classNames='translate' onExited={() => {
-                window.history.back()
-            }}>
+            <CSSTransition in={this.state.show} timeout={300} classNames='translate' >
                 <div className='album-wrapper'>
                     <MusicHeader title={album.title} headerBackEvent={() => {
                         this.setState({
                             show: false
+                        }, () => {
+                            // 防止返回造成闪屏现象
+                            setTimeout(() => {
+                                window.history.back()
+                            }, 295)
                         })
                     }} />
                     <div className='poster' >
