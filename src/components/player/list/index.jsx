@@ -26,7 +26,7 @@ class SongList extends Component {
                 <p className='name-singer'>
                     <span className='name'>{item.name}</span><span className='singer'> - {item.singer}</span>
                 </p>
-                <i className={(index === currentSongIndex ? 'forbid ' : '') + 'iconfont icon-delect'} onClick={() => index === currentSongIndex ? {} : removeSong(item.id)}></i>
+                <i className={(index === currentSongIndex ? 'forbid ' : '') + 'iconfont icon-remove'} onClick={() => index === currentSongIndex ? {} : removeSong(item.id)}></i>
             </li>
         ))
         return (

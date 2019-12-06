@@ -9,6 +9,7 @@ import * as AlbumModel from "@/model/album"
 import * as SongModel from "@/model/song"
 import Detail from '@/containers/Detail'
 import {Route} from 'react-router-dom'
+import {getSongVKey} from "@/api/song"
 
 class Search extends Component {
     constructor(props) {
@@ -132,6 +133,21 @@ class Search extends Component {
         }
     } 
 
+    // 获取歌曲vkey
+    toSongVkey = (song) => {
+        return () => {
+            getSongVKey(song.mId).then(res => {
+                if(res && res.code === CODE_SUCCESS && res.data.items) {
+                    let item = res.data.items[0];
+                    song.url =  `http://dl.stream.qqmusic.qq.com/${item.filename}?vkey=${item.vkey}&guid=3655047200&fromtag=66`;
+
+                    this.props.setSongs([song]);
+                    this.props.changeCurrentSong(song);
+                }
+            })
+        }
+    }
+
     render() {
         const { hotKeys, w, loading, album, singer, songs } = this.state
         const {match} = this.props
@@ -143,7 +159,7 @@ class Search extends Component {
 
         ))
         let song_s = songs.map(item => (
-            <li className='item song' key={item.id}>
+            <li className='item song' key={item.id} onClick={this.toSongVkey(item)}>
                 <div className='left'>
                     <i className='iconfont icon-music1'></i>
                 </div>
