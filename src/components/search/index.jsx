@@ -181,6 +181,7 @@ class Search extends Component {
                                 onKeyDown={
                                     e => {
                                         if (e.keyCode === 13) {
+                                            e.currentTarget.blur()
                                             this.search(e.currentTarget.value)
                                         }
                                     }
