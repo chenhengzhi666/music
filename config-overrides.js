@@ -31,7 +31,7 @@ module.exports = {
             ]
         ),
         (config, env) => {
-            console.log(config)
+            config.output.publicPath = './';    //修改输出文件引入路径
             return config;
         }
     ),
