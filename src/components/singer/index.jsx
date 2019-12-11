@@ -39,6 +39,11 @@ class Singer extends Component {
     }
 
     componentDidMount() {
+        if(!this.props.match.isExact) {
+            this.setState({
+                loading: false
+            })
+        }
         // 初始化歌手分类总宽
         let navTypeListDOM = this.refs.navTypeList
         let navTypeElems = navTypeListDOM.querySelectorAll('li')

@@ -6,6 +6,7 @@ import MusicHeader from '@/common/music-header'
 import MiniPlayer from '../mini'
 import Progress from '@/common/progress'
 import { CSSTransition } from 'react-transition-group'
+import Error from '@/common/error'
 import SongList from '@/containers/SongList'
 
 class Player extends Component {
@@ -33,8 +34,6 @@ class Player extends Component {
 
         this.audioDOM.addEventListener('canplay', () => {
             this.audioDOM.play()
-            this.startImgRotate()
-
             this.setState({
                 playStatus: true
             })
@@ -52,8 +51,10 @@ class Player extends Component {
         }, false)
 
         this.audioDOM.addEventListener('error', () => { 
-            this.stopImgRotate()
-            alert('歌曲加载出错！') 
+            this.setState({
+                playStatus: false
+            })
+            this.ErrorComponent.showError('歌曲加载失败')
         }, false)
     }
 
@@ -69,15 +70,19 @@ class Player extends Component {
                 this.audioDOM.src = this.currentSong.url
                 this.first = true
             }
-            this.audioDOM.play()
-            this.startImgRotate()
-
-            this.setState({
-                playStatus: true
+            this.audioDOM.play().then(() => {
+                this.setState({
+                    playStatus: true
+                })
+            }).catch(err => {
+                this.setState({
+                    playStatus: false
+                })
+                this.ErrorComponent.showError('歌曲加载失败')
             })
+            
         } else {
             this.audioDOM.pause()
-            this.stopImgRotate()
 
             this.setState({
                 playStatus: false
@@ -85,30 +90,35 @@ class Player extends Component {
         }
     }
 
-    /**
-     * 开始旋转图片
-     */
-    startImgRotate = () => {
-        let singerImgDOM = ReactDOM.findDOMNode(this.refs.singerImg)
-        if (singerImgDOM.className.indexOf('rotate') === -1) {
-            singerImgDOM.classList.add('rotate')
-        } else {
-            singerImgDOM.style.webkitAnimationPlayState = 'running'
-            singerImgDOM.style.animationPlayState = 'running'
+    // 下一首
+    nextSong = (index) => {
+        return () => {
+            let {playSongs, changeCurrentSong} = this.props
+            if(playSongs.length > index + 1) {
+                changeCurrentSong(playSongs[index + 1])
+            }else if(playSongs.length === index + 1) {
+                changeCurrentSong(playSongs[0])
+            }
         }
     }
-    /**
-     * 停止旋转图片
-     */
-    stopImgRotate = () => {
-        let singerImgDOM = ReactDOM.findDOMNode(this.refs.singerImg)
-        singerImgDOM.style.webkitAnimationPlayState = 'paused'
-        singerImgDOM.style.animationPlayState = 'paused'
+
+    // 上一首
+    prevSong = (index) => {
+        return () => {
+            let {playSongs, changeCurrentSong} = this.props
+            if(index > 0) {
+                changeCurrentSong(playSongs[index - 1])
+            }else if(index === 0) {
+                changeCurrentSong(playSongs[playSongs.length - 1])
+            }
+        }
     }
 
     /* 播放器显示状态 */
-    playerStatus = (status) => () => {
-        this.props.showMusicPlayer(status)
+    playerStatus = (status) => {
+        return () => {
+            this.props.showMusicPlayer(status)
+        }
     }
 
     // 点击进度条
@@ -126,7 +136,6 @@ class Player extends Component {
     handleDrag = (progress) => {
         if (this.audioDOM.duration > 0) {
             this.audioDOM.pause()
-            this.stopImgRotate()
             this.setState({
                 playStatus: false,
                 playProgress: progress
@@ -150,7 +159,6 @@ class Player extends Component {
                 this.playOrPause()
             } else {
                 this.audioDOM.play()
-                // this.startImgRotate()
                 this.setState({
                     playStatus: true
                 })
@@ -159,8 +167,12 @@ class Player extends Component {
     }
 
     render() {
-        let { currentSong, showStatus, playSongs, showSongList } = this.props
+        let { currentSong, showStatus, playSongs, showSongList, currentSongIndex } = this.props
         let { currentTime, playProgress, playStatus } = this.state
+        let imgStyle = {
+            WebkitAnimationPlayState: playStatus ? 'running' : 'paused',
+            animationPlayState: playStatus ? 'running' : 'paused'
+        }
         //从redux中获取当前播放歌曲
         if (currentSong && currentSong.url) {
             //当前歌曲发发生变化
@@ -178,7 +190,7 @@ class Player extends Component {
         let playBg = song.img ? song.img : require('@/assets/img/default_play_bg.jpg')
         //播放按钮样式
         let playButtonClass = playStatus ? 'icon-pause' : 'icon-play'
-        song.playStatus = playStatus
+        // song.playStatus = playStatus
         return (
             <div className='player-container'>
                 <CSSTransition
@@ -197,7 +209,7 @@ class Player extends Component {
                             <div className='name'>{song.singer}</div>
                         </div>
                         <div className='singer-middle'>
-                            <div className='singer-img' ref='singerImg'>
+                            <div className='singer-img rotate' ref='singerImg' style={imgStyle}>
                                 <img src={playBg} alt={song.name} />
                             </div>
                         </div>
@@ -219,13 +231,13 @@ class Player extends Component {
                                     <div className='play-model-button'>
                                         <i className='icon-music iconfont'></i>
                                     </div>
-                                    <div className='previous-button'>
+                                    <div className='previous-button' onClick={this.prevSong(currentSongIndex)}>
                                         <i className='icon-previous iconfont'></i>
                                     </div>
                                     <div className='play-button' onClick={this.playOrPause}>
                                         <i className={playButtonClass + ' iconfont'}></i>
                                     </div>
-                                    <div className='next-button'>
+                                    <div className='next-button' onClick={this.nextSong(currentSongIndex)}>
                                         <i className='icon-next iconfont'></i>
                                     </div>
                                     <div className='play-list-button' onClick={showSongList}>
@@ -246,7 +258,10 @@ class Player extends Component {
                     progress={playProgress}
                     playStatus={playStatus}
                     playOrPause={this.playOrPause}
+                    nextSong={this.nextSong(currentSongIndex)}
                 />
+
+                <Error onRef={ref => this.ErrorComponent = ref} />
             </div>
 
         )

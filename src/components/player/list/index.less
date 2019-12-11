@@ -54,12 +54,26 @@
                     &:last-child {
                         margin-bottom: 40px;
                     }
+                    &.forbid {
+                        color: #cccccc;
+                        .name-singer {
+                            color: orangered;
+                            .singer {
+                                color: #ff672f;
+                            }
+                        }
+                    }
                     .name-singer {
                         flex: 1;
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
                         font-size: 16px;
+
+                        .song-index {
+                            margin-right: 6px;
+                            font-size: 14px;
+                        }
 
                         .singer {
                             font-size: 12px;
@@ -70,9 +84,6 @@
                     i {
                         flex: 0 0 62px;
                         text-align: center;
-                        &.forbid {
-                            color: #cccccc;
-                        }
                     }
                 }
             }

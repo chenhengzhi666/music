@@ -16,17 +16,29 @@ class SongList extends Component {
         }
         this.listScroll = new BScroll(this.refs.list, options)
     }
+
     componentDidUpdate() {
         this.listScroll.refresh()
     }
+
+    removeSong = (item, index, currentSongIndex) => {
+        return (e) => {
+            e.stopPropagation()
+            if(index !== currentSongIndex) {
+                this.props.removeSong(item.id)
+            }
+        }
+        
+    }
+
     render() {
-        let { listStatus, currentSongIndex, songs, currentSong, hideSongList, removeSong } = this.props
+        let { listStatus, currentSongIndex, songs, hideSongList } = this.props
         let songList = songs.length > 0 && songs.map((item, index) => (
-            <li key={item.id} className='item'>
+            <li key={item.id} className={(index === currentSongIndex ? 'forbid ' : '') + 'item'} onClick={() => this.props.changeCurrentSong(item)}>
                 <p className='name-singer'>
-                    <span className='name'>{item.name}</span><span className='singer'> - {item.singer}</span>
+                <span className='name'><i className='song-index'>{index + 1}</i>{item.name}</span><span className='singer'> - {item.singer}</span>
                 </p>
-                <i className={(index === currentSongIndex ? 'forbid ' : '') + 'iconfont icon-remove'} onClick={() => index === currentSongIndex ? {} : removeSong(item.id)}></i>
+                <i className='iconfont icon-remove' onClick={this.removeSong(item, index, currentSongIndex)}></i>
             </li>
         ))
         return (
@@ -36,6 +48,8 @@ class SongList extends Component {
                 classNames='lists'
                 onEnter={() => {
                     this.songListWrapperDOM.style.display = 'block'
+                    let f = currentSongIndex >= 4 ? currentSongIndex - 4 : 0
+                    this.listScroll.scrollTo(0, - 40 * f, 500)
                 }}
                 onExited={() => {
                     this.songListWrapperDOM.style.display = 'none'
